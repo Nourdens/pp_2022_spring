@@ -14,7 +14,7 @@ TEST(MonteKarloSequential, Test_X_On_Y) {
       getSequentialMonteKarlo([](std::vector<double> x) { return x[0] * x[1]; },
                               upperLimit, lowerLimit, amountOfPoints);
 
-  ASSERT_NEAR(result, 12, 2);
+  ASSERT_NEAR(result, 12, 4);
 }
 
 TEST(MonteKarloSequential, Test_Sin_X) {
@@ -25,7 +25,7 @@ TEST(MonteKarloSequential, Test_Sin_X) {
       getSequentialMonteKarlo([](std::vector<double> x) { return sin(x[0]); },
                               upperLimit, lowerLimit, amountOfPoints);
 
-  ASSERT_NEAR(result, 1.38, 1);
+  ASSERT_NEAR(result, 1.38, 2);
 }
 
 TEST(MonteKarloSequential, Test_Cos_X_On_X) {
@@ -36,7 +36,7 @@ TEST(MonteKarloSequential, Test_Cos_X_On_X) {
       [](std::vector<double> x) { return cos(x[0]) * x[0]; }, upperLimit,
       lowerLimit, amountOfPoints);
 
-  ASSERT_NEAR(result, -7.66, 2);
+  ASSERT_NEAR(result, -7.66, 4);
 }
 
 TEST(MonteKarloSequential, Test_Cos_X_On_Sin_X_On_X) {
@@ -47,7 +47,7 @@ TEST(MonteKarloSequential, Test_Cos_X_On_Sin_X_On_X) {
       [](std::vector<double> x) { return cos(x[0]) * sin(x[0]) * x[0]; },
       upperLimit, lowerLimit, amountOfPoints);
 
-  ASSERT_NEAR(result, -1.12, 1);
+  ASSERT_NEAR(result, -1.12, 2);
 }
 
 TEST(MonteKarloSequential, Test_Cos_X_On_Sin_X_On_Sin_X_On_X) {
@@ -60,5 +60,5 @@ TEST(MonteKarloSequential, Test_Cos_X_On_Sin_X_On_Sin_X_On_X) {
       },
       upperLimit, lowerLimit, amountOfPoints);
 
-  ASSERT_NEAR(result, -1.1, 1);
+  ASSERT_NEAR(result, -1.1, 2);
 }
