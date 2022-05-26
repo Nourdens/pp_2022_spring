@@ -1,6 +1,5 @@
 // Copyright 2022 Podovinnikov Artyom
 #include <gtest/gtest.h>
-#include <omp.h>
 #include <vector>
 #include <complex>
 #include "./sparsematrix.h"
@@ -132,28 +131,38 @@ TEST_P(parametrized_matrix_multiplication, mult_small_dimensions) {
 
     std::cout << "size = " << size <<
         "; nonZeroElementsInEveryRow = " << nonZero << '\n';
-    auto begin = omp_get_wtime();
+    auto begin = tbb::tick_count::now();
     SparseMatrix seq_res = a * b;
-    auto end = omp_get_wtime();
-    auto elapsed_ms = end - begin;
+    auto end = tbb::tick_count::now();
+    auto elapsed_ms = (end - begin).seconds();
     std::cout << "Sequential time = " << elapsed_ms << "s\n";
 
-    begin = omp_get_wtime();
+    begin = tbb::tick_count::now();
     SparseMatrix openmp_res = a.openMPMultiplication(b);
-    end = omp_get_wtime();
-    elapsed_ms = end - begin;
+    end = tbb::tick_count::now();
+    elapsed_ms = (end - begin).seconds();
     std::cout << "openMP time = " << elapsed_ms << "s\n";
 
-    ASSERT_EQ(seq_res.getSize(), openmp_res.getSize());
-    ASSERT_EQ(seq_res.getCols(), openmp_res.getCols());
-    ASSERT_EQ(seq_res.getValues(), openmp_res.getValues());
-    ASSERT_EQ(seq_res.getPointers(), openmp_res.getPointers());
+    begin = tbb::tick_count::now();
+    SparseMatrix tbb_res = a.TBBMultiplication(b, 4);
+    end = tbb::tick_count::now();
+    elapsed_ms = (end - begin).seconds();
+    std::cout << "TBB time = " << elapsed_ms << "s\n";
+
+    ASSERT_EQ(tbb_res.getSize(),     openmp_res.getSize());
+    ASSERT_EQ(tbb_res.getCols(),     openmp_res.getCols());
+    ASSERT_EQ(tbb_res.getValues(),   openmp_res.getValues());
+    ASSERT_EQ(tbb_res.getPointers(), openmp_res.getPointers());
+    ASSERT_EQ(tbb_res.getSize(),     seq_res.getSize());
+    ASSERT_EQ(tbb_res.getCols(),     seq_res.getCols());
+    ASSERT_EQ(tbb_res.getValues(),   seq_res.getValues());
+    ASSERT_EQ(tbb_res.getPointers(), seq_res.getPointers());
 }
 
 INSTANTIATE_TEST_SUITE_P(matrix_CSR_complex,
                          parametrized_matrix_multiplication,
                          testing::Combine(
     testing::Values(200),
-    testing::Values(50)
+    testing::Values(15)
 ));
 
