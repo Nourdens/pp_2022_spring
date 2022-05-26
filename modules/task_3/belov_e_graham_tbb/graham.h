@@ -18,14 +18,13 @@ struct Point {
   }
 };
 
-bool comp(const Point& A, const Point& B);  // B<C?
-
-bool rotate(const Point& A, const Point& B, const Point& C);
-
-std::vector<Point> RandPoint(int n);
-
+bool cmp(Point A, Point B);
+bool cw(Point A, Point B, Point C);
+bool ccw(Point A, Point B, Point C);
 std::vector<Point> Graham(std::vector<Point>::iterator begin,
                           std::vector<Point>::iterator end);
-std::vector<Point> TbbGraham(std::vector<Point> tmp, std::size_t n_threads = 2);
+std::vector<Point> RandPoint(int n);
+std::vector<Point> TbbGraham(std::vector<Point> tmp,
+                             std::size_t threads_num = 2);
 
 #endif  // MODULES_TASK_3_BELOV_E_GRAHAM_TBB_GRAHAM_H_
