@@ -5,7 +5,6 @@
 #include <functional>
 #include <iostream>
 #include <vector>
-#include <chrono>
 #include "./monte_karlo.h"
 
 const int amountOfPoints = 5000000;
